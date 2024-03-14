@@ -1,0 +1,50 @@
+# Ignore build directory
+/build/
+
+# Ignore .env file
+.env
+
+# Ignore Visual Studio Code settings
+.vscode/
+
+# Ignore CMake generated files
+CMakeCache.txt
+CMakeFiles/
+CPM_modules/
+Makefile
+cmake_install.cmake
+cpm-package-lock.cmake
+
+# Ignore compiled binary
+qualfilter
+
+# Ignore submodules
+seqan3/
+sharg-parser/
+
+# Ignore logs
+*.log
+
+# Ignore all .o and .a files
+*.o
+*.a
+
+# Ignore all .so files
+*.so
+
+# Ignore other generated files
+*.lo
+*.la
+*.al
+libs.a
+*.so
+*.so.[0-9]*
+*.dylib
+
+# Ignore executables
+*.exe
+*.out
+*.app
+
+# ignore test files
+*.fastq.gz
