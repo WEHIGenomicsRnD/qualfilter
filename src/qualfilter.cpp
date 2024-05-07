@@ -87,12 +87,13 @@ int main(int argc, char ** argv)
     seqan3::sequence_file_output fout{out_prefix + "_R1.fq"};
     seqan3::sequence_file_output fout2{out_prefix + "_R2.fq"};
 
+    bool pass1 = false;
+    bool pass2 = false;
+
     for (auto && [rec1, rec2] : seqan3::views::zip(fin1, fin2)) {
         if (rec1.base_qualities().size() != rec1.sequence().size() || rec2.base_qualities().size() != rec2.sequence().size()) {
             throw std::runtime_error("Sequence and quality scores are not the same length.");
         }
-        bool pass1;
-        bool pass2;
         
         if (mode == "read1") {
             pass1 = read_passes_filter(rec1.base_qualities(), min_qual, min_len);
