@@ -26,6 +26,15 @@ Now build the project:
 ./build.sh
 ```
 
+This will build the binary file to `build/qualfilter`.
+
+If you have permissions to install on your system you can also run:
+
+```bash
+cd build
+make install
+```
+
 You can now run the test:
 
 ```bash

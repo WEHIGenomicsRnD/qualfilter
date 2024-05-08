@@ -8,4 +8,4 @@ module load gcc/12.2.0 cmake
     -o test \
     -m both \
     -q 10 \
-    -n 20
+    -p 70

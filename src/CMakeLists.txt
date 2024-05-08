@@ -12,3 +12,5 @@ find_package (sharg 1.0 REQUIRED)
 # build app with seqan3
 add_executable (qualfilter qualfilter.cpp)
 target_link_libraries (qualfilter seqan3::seqan3 sharg::sharg)
+
+install(TARGETS qualfilter DESTINATION "${CMAKE_INSTALL_BINDIR}")
