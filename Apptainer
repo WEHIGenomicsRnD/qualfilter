@@ -1,0 +1,32 @@
+Bootstrap: docker
+From: ubuntu:latest
+
+%labels
+    Author WEHI Genomics R&D
+    Maintainer  cmero.ma@wehi.edu.au
+    URL https://www.wehi.edu.au
+
+%post
+    # Set timezone to Etc/UTC for tzdata. See issue #4365 for more details.
+    TZ=Etc/UTC && \
+        ln -snf /usr/share/zoneinfo/$TZ /etc/localtime && \
+        echo $TZ > /etc/timezone
+
+    apt-get update
+    apt-get install -y build-essential cmake g++-12 git
+    
+    apt-get clean
+    rm -rf /var/lib/apt/lists/*
+
+    git clone https://github.com/WEHIGenomicsRnD/qualfilter.git
+    cd qualfilter
+    git clone --recurse-submodules https://github.com/seqan/sharg-parser.git
+    git clone --recurse-submodules https://github.com/seqan/seqan3.git
+    ./build.sh
+
+    export PATH=$PWD/build:$PATH
+
+%runscript
+    exec /bin/bash "$@"
+%startscript
+    exec /bin/bash "$@"

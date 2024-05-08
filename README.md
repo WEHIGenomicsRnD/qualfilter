@@ -10,6 +10,7 @@ First clone the repository:
 
 ```bash
 git clone https://github.com/WEHIGenomicsRnD/qualfilter.git
+cd qualfilter
 ```
 
 Now you have to install the dependencies [shargs](https://docs.seqan.de/sharg/main_user/index.html) and [seqan3](https://docs.seqan.de/seqan3/main_user/index.html):
