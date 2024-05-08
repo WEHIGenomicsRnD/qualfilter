@@ -1,8 +1,8 @@
 # QualFilter 
 
-Perform quality filtering on paired reads when read1, read2, a single read, or both reads pass the quality filter. Always keeps the paired reads together.
+Very simple quality filtering on paired reads when read1, read2, a single read, or both reads based on percentage of passed bases. Always keeps the paired reads together.
 
-This is a C++ implementation of the [read_qual_filter.py script](https://github.com/WEHIGenomicsRnD/genomics-toolkit/blob/5e91668f5c9b3fd1f25e07339b9cb40ce859ecb6/bin/read_qual_filter.py) for performance reasons.
+This is a modified C++ implementation of the [read_qual_filter.py script](https://github.com/WEHIGenomicsRnD/genomics-toolkit/blob/5e91668f5c9b3fd1f25e07339b9cb40ce859ecb6/bin/read_qual_filter.py) for performance reasons.
 
 ## Installation
 
@@ -42,7 +42,7 @@ The test.sh shows example usage:
     -o test \
     -m both \
     -q 10 \
-    -n 20
+    -p 80
 ```
 
 ```
@@ -61,8 +61,8 @@ OPTIONS
           Mode to run in. Default: "single". Value must be one of [read1, read2, single, both].
     -q, --min-qual (signed 32 bit integer)
           Quality score to filter on. Default: 30. Value must be in range [0,40].
-    -n, --min-len (signed 32 bit integer)
-          Minimum length of read to keep. Default: 30. Value must be in range [0,1000].
+    -p, --min-pass-percent (float)
+          Minimum percent (0-100) of bases that must pass the quality filter. Default: 80. Value must be in range [0,100].
 
   Common options
     -h, --help

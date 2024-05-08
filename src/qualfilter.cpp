@@ -8,22 +8,24 @@ using namespace seqan3;
 using namespace seqan3::literals;
 using namespace std;
 
-bool read_passes_filter(std::vector<seqan3::phred42> quals, int min_qual, int min_len) {
-    int max_len = 0;
-    int current_len = 0;
+bool read_passes_filter(std::vector<seqan3::phred42> quals, int min_qual, float min_pass_percent) {
+    int read_len = 0;
+    int bases_passed = 0;
+    float pass_percent = 0;
 
-    if (quals.size() < min_len)
-         return false;
-    
     for (auto && q : quals) {
+        ++read_len;
         if (static_cast<int>(q.to_phred()) >= min_qual) {
-            ++current_len;
-            max_len = std::max(current_len, max_len);
-            if (max_len >= min_len) {
-                return true;
-            }
-        } else
-            current_len = 0;
+            ++bases_passed;
+        }
+    }
+    if (read_len == 0) {
+        return false;
+    } else {
+        pass_percent = (static_cast<float>(bases_passed) / static_cast<float>(read_len)) * 100;
+        if (pass_percent >= min_pass_percent) {
+            return true;
+        }
     }
     return false;
 }
@@ -35,11 +37,11 @@ int main(int argc, char ** argv)
     string out_prefix;
     string mode = "single";
     int min_qual = 30;
-    int min_len = 30;
+    float min_pass_percent = 80;
     
     sharg::value_list_validator mode_validator{"read1", "read2", "single", "both"};
     sharg::arithmetic_range_validator qual_validator{0, 40};
-    sharg::arithmetic_range_validator min_len_validator{0, 1000};
+    sharg::arithmetic_range_validator min_pass_percent_validator{0, 100};
  
     sharg::parser parser{"qualfilter", argc, argv};
     parser.add_subsection("Input/output options:");
@@ -70,11 +72,11 @@ int main(int argc, char ** argv)
                       .long_id = "min-qual",
                       .description = "Quality score to filter on.",
                       .validator = qual_validator});
-    parser.add_option(min_len,
-                      sharg::config{.short_id = 'n',
-                      .long_id = "min-len",
-                      .description = "Minimum length of read to keep.",
-                      .validator = min_len_validator});
+    parser.add_option(min_pass_percent,
+                      sharg::config{.short_id = 'p',
+                      .long_id = "min-pass-percent",
+                      .description = "Minimum percent (0-100) of bases that must pass the quality filter.",
+                      .validator = min_pass_percent_validator});
     parser.parse();
 
     // tracking variables
@@ -96,12 +98,12 @@ int main(int argc, char ** argv)
         }
         
         if (mode == "read1") {
-            pass1 = read_passes_filter(rec1.base_qualities(), min_qual, min_len);
+            pass1 = read_passes_filter(rec1.base_qualities(), min_qual, min_pass_percent);
         } else if (mode == "read2") {
-            pass2 = read_passes_filter(rec2.base_qualities(), min_qual, min_len);
+            pass2 = read_passes_filter(rec2.base_qualities(), min_qual, min_pass_percent);
         } else {
-            pass1 = read_passes_filter(rec1.base_qualities(), min_qual, min_len);
-            pass2 = read_passes_filter(rec2.base_qualities(), min_qual, min_len);
+            pass1 = read_passes_filter(rec1.base_qualities(), min_qual, min_pass_percent);
+            pass2 = read_passes_filter(rec2.base_qualities(), min_qual, min_pass_percent);
         }
 
         if (mode == "read1" && pass1) {
