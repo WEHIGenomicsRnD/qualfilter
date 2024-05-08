@@ -23,10 +23,10 @@ From: ubuntu:latest
     git clone --recurse-submodules https://github.com/seqan/sharg-parser.git
     git clone --recurse-submodules https://github.com/seqan/seqan3.git
     ./build.sh
-
-    export PATH=$PWD/build:$PATH
+    cd build
+    make install
 
 %runscript
-    exec /bin/bash "$@"
+    exec "$@"
 %startscript
-    exec /bin/bash "$@"
+    exec "$@"
